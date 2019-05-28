@@ -3261,7 +3261,6 @@ static LLVMValueRef ir_render_unreachable(CodeGen *g, IrExecutable *executable,
         IrInstructionUnreachable *unreachable_instruction)
 {
     if (ir_want_runtime_safety(g, &unreachable_instruction->base)) {
-        printf("Now I'm dying\n");
         gen_safety_crash(g, PanicMsgIdUnreachable);
     } else {
         LLVMBuildUnreachable(g->builder);
@@ -5803,7 +5802,6 @@ static void ir_render(CodeGen *g, ZigFn *fn_entry) {
             IrInstruction *instruction = current_block->instruction_list.at(instr_i);
             if (instruction->ref_count == 0 && !ir_has_side_effects(instruction))
                 continue;
-            printf("About to render: %s\n", fn_entry->llvm_name);
             instruction->llvm_value = ir_render_instruction(g, executable, instruction);
         }
         current_block->llvm_exit_block = LLVMGetInsertBlock(g->builder);
