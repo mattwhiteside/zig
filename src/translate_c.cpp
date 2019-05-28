@@ -1262,6 +1262,7 @@ static AstNode *trans_type(Context *c, const ZigClangType *ty, ZigClangSourceLoc
         case ZigClangType_ObjCTypeParam:
         case ZigClangType_DeducedTemplateSpecialization:
         case ZigClangType_DependentAddressSpace:
+        case ZigClangType_MacroQualified:
         case ZigClangType_DependentVector:
             emit_warning(c, source_loc, "unsupported type: '%s'", ZigClangType_getTypeClassName(ty));
             return nullptr;
@@ -2150,6 +2151,12 @@ static AstNode *trans_implicit_cast_expr(Context *c, ResultUsed result_used, Tra
         case ZigClangCK_IntToOCLSampler:
             emit_warning(c, bitcast(stmt->getBeginLoc()), "TODO handle C CK_IntToOCLSampler");
             return nullptr;
+        case ZigClangCK_IntegralToFixedPoint:
+            emit_warning(c, bitcast(stmt->getBeginLoc()), "TODO handle C CK_IntegralToFixedPoint");
+            break;
+        case ZigClangCK_FixedPointToIntegral:
+            emit_warning(c, bitcast(stmt->getBeginLoc()), "TODO handle C CK_FixedPointToIntegral");
+            break;
     }
     zig_unreachable();
 }
@@ -2633,6 +2640,12 @@ static int trans_local_declaration(Context *c, TransScope *scope, const clang::D
             case clang::Decl::TranslationUnit:
                 emit_warning(c, bitcast(stmt->getBeginLoc()), "TODO handle C TranslationUnit");
                 return ErrorUnexpected;
+            case clang::Decl::OMPDeclareMapper:
+                emit_warning(c, bitcast(stmt->getBeginLoc()), "TODO handle C OMPDeclareMapper");
+                break;
+            case clang::Decl::OMPAllocate:
+                emit_warning(c, bitcast(stmt->getBeginLoc()), "TODO handle C OMPAllocate");
+                break;
         }
         zig_unreachable();
     }
@@ -2908,6 +2921,7 @@ static AstNode *trans_bool_expr(Context *c, ResultUsed result_used, TransScope *
         case ZigClangType_DeducedTemplateSpecialization:
         case ZigClangType_DependentAddressSpace:
         case ZigClangType_DependentVector:
+        case ZigClangType_MacroQualified:
             return res;
     }
     zig_unreachable();
@@ -3813,9 +3827,9 @@ static int trans_stmt_extra(Context *c, TransScope *scope, const ZigClangStmt *s
         case ZigClangStmt_IndirectGotoStmtClass:
             emit_warning(c, ZigClangStmt_getBeginLoc(stmt), "TODO handle C IndirectGotoStmtClass");
             return ErrorUnexpected;
-        case ZigClangStmt_LabelStmtClass:
-            emit_warning(c, ZigClangStmt_getBeginLoc(stmt), "TODO handle C LabelStmtClass");
-            return ErrorUnexpected;
+//        case ZigClangStmt_LabelStmtClass:
+//            emit_warning(c, ZigClangStmt_getBeginLoc(stmt), "TODO handle C LabelStmtClass");
+//            return ErrorUnexpected;
         case ZigClangStmt_MSDependentExistsStmtClass:
             emit_warning(c, ZigClangStmt_getBeginLoc(stmt), "TODO handle C MSDependentExistsStmtClass");
             return ErrorUnexpected;
@@ -3992,6 +4006,11 @@ static int trans_stmt_extra(Context *c, TransScope *scope, const ZigClangStmt *s
             return ErrorUnexpected;
         case ZigClangStmt_SEHTryStmtClass:
             emit_warning(c, ZigClangStmt_getBeginLoc(stmt), "TODO handle C SEHTryStmtClass");
+            return ErrorUnexpected;
+        case ZigClangStmt_LabelStmtClass:
+            return ErrorUnexpected;
+        case ZigClangStmt_SourceLocExprClass:
+            emit_warning(c, ZigClangStmt_getBeginLoc(stmt), "TODO handle C SourceLocExpr");
             return ErrorUnexpected;
     }
     zig_unreachable();
@@ -4410,7 +4429,7 @@ static AstNode *trans_ap_value(Context *c, const ZigClangAPValue *ap_value, ZigC
     switch (ZigClangAPValue_getKind(ap_value)) {
         case ZigClangAPValueInt:
             return trans_create_node_apint(c, ZigClangAPValue_getInt(ap_value));
-        case ZigClangAPValueUninitialized:
+        case ZigClangAPValueNone:
             return trans_create_node(c, NodeTypeUndefinedLiteral);
         case ZigClangAPValueArray: {
             emit_warning(c, source_loc, "TODO add a test case for this code");
@@ -4480,6 +4499,9 @@ static AstNode *trans_ap_value(Context *c, const ZigClangAPValue *ap_value, ZigC
         case ZigClangAPValueFloat:
             emit_warning(c, source_loc, "unsupported initializer value kind: Float");
             return nullptr;
+        case ZigClangAPValueFixedPoint:
+            emit_warning(c, source_loc, "unsupported initializer value kind: FixedPoint");
+            return nullptr;
         case ZigClangAPValueComplexInt:
             emit_warning(c, source_loc, "unsupported initializer value kind: ComplexInt");
             return nullptr;
@@ -4501,6 +4523,10 @@ static AstNode *trans_ap_value(Context *c, const ZigClangAPValue *ap_value, ZigC
         case ZigClangAPValueAddrLabelDiff:
             emit_warning(c, source_loc, "unsupported initializer value kind: AddrLabelDiff");
             return nullptr;
+        case ZigClangAPValueIndeterminate:
+            emit_warning(c, source_loc, "unsupported initializer value kind: Indeterminate");
+            return nullptr;
+        break;
     }
     zig_unreachable();
 }

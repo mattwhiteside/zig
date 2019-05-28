@@ -223,6 +223,7 @@ enum ZigLLVM_ArchType {
     ZigLLVM_armeb,          // ARM (big endian): armeb
     ZigLLVM_aarch64,        // AArch64 (little endian): aarch64
     ZigLLVM_aarch64_be,     // AArch64 (big endian): aarch64_be
+    ZigLLVM_aarch64_32,     // AArch64 (little endian) ILP32: aarch64_32
     ZigLLVM_arc,            // ARC: Synopsys ARC
     ZigLLVM_avr,            // AVR: Atmel AVR microcontroller
     ZigLLVM_bpfel,          // eBPF or extended BPF or 64-bit BPF (little endian)
@@ -366,8 +367,8 @@ enum ZigLLVM_OSType {
     ZigLLVM_HermitCore, // HermitCore Unikernel/Multikernel
     ZigLLVM_Hurd,       // GNU/Hurd
     ZigLLVM_WASI,       // Experimental WebAssembly OS
-
-    ZigLLVM_LastOSType = ZigLLVM_WASI
+    ZigLLVM_Emscripten,
+    ZigLLVM_LastOSType = ZigLLVM_Emscripten
 };
 
 // Synchronize with target.cpp::environ_list
@@ -383,6 +384,9 @@ enum ZigLLVM_EnvironmentType {
     ZigLLVM_CODE16,
     ZigLLVM_EABI,
     ZigLLVM_EABIHF,
+    ZigLLVM_ELFv1,
+    ZigLLVM_ELFv2,
+
     ZigLLVM_Android,
     ZigLLVM_Musl,
     ZigLLVM_MuslEABI,

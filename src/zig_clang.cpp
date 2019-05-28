@@ -199,6 +199,8 @@ void ZigClang_detect_enum_CK(clang::CastKind x) {
         case clang::CK_ZeroToOCLOpaqueType:
         case clang::CK_FixedPointCast:
         case clang::CK_FixedPointToBoolean:
+        case clang::CK_FixedPointToIntegral:
+        case clang::CK_IntegralToFixedPoint:
             break;
     }
 };
@@ -313,7 +315,8 @@ void ZigClang_detect_enum_TypeClass(clang::Type::TypeClass ty) {
         case clang::Type::ObjCObjectPointer:
         case clang::Type::Pipe:
         case clang::Type::Atomic:
-            break;
+        case clang::Type::MacroQualified:
+          break;
     }
 }
 
@@ -565,7 +568,8 @@ void ZigClang_detect_enum_StmtClass(clang::Stmt::StmtClass x) {
         case clang::Stmt::OMPTargetTeamsDistributeParallelForDirectiveClass:
         case clang::Stmt::OMPTargetTeamsDistributeParallelForSimdDirectiveClass:
         case clang::Stmt::OMPTargetTeamsDistributeSimdDirectiveClass:
-            break;
+        case clang::Stmt::SourceLocExprClass:
+          break;
     }
 }
 
@@ -769,9 +773,9 @@ static_assert((clang::Stmt::StmtClass)ZigClangStmt_OMPTargetTeamsDistributeSimdD
 
 void ZigClang_detect_enum_APValueKind(clang::APValue::ValueKind x) {
     switch (x) {
-        case clang::APValue::Uninitialized:
         case clang::APValue::Int:
         case clang::APValue::Float:
+        case clang::APValue::FixedPoint:
         case clang::APValue::ComplexInt:
         case clang::APValue::ComplexFloat:
         case clang::APValue::LValue:
@@ -781,11 +785,14 @@ void ZigClang_detect_enum_APValueKind(clang::APValue::ValueKind x) {
         case clang::APValue::Union:
         case clang::APValue::MemberPointer:
         case clang::APValue::AddrLabelDiff:
+        case clang::APValue::None:
+        case clang::APValue::Indeterminate:
             break;
     }
 }
 
-static_assert((clang::APValue::ValueKind)ZigClangAPValueUninitialized == clang::APValue::Uninitialized, "");
+static_assert((clang::APValue::ValueKind)ZigClangAPValueNone == clang::APValue::None, "");
+static_assert((clang::APValue::ValueKind)ZigClangAPValueIndeterminate == clang::APValue::Indeterminate, "");
 static_assert((clang::APValue::ValueKind)ZigClangAPValueInt == clang::APValue::Int, "");
 static_assert((clang::APValue::ValueKind)ZigClangAPValueFloat == clang::APValue::Float, "");
 static_assert((clang::APValue::ValueKind)ZigClangAPValueComplexInt == clang::APValue::ComplexInt, "");
@@ -866,8 +873,10 @@ void ZigClang_detect_enum_DeclKind(clang::Decl::Kind x) {
         case clang::Decl::VarTemplatePartialSpecialization:
         case clang::Decl::EnumConstant:
         case clang::Decl::IndirectField:
+        case clang::Decl::OMPDeclareMapper:
         case clang::Decl::OMPDeclareReduction:
         case clang::Decl::UnresolvedUsingValue:
+        case clang::Decl::OMPAllocate:
         case clang::Decl::OMPRequires:
         case clang::Decl::OMPThreadPrivate:
         case clang::Decl::ObjCPropertyImpl:
@@ -944,8 +953,11 @@ static_assert((clang::Decl::Kind)ZigClangDeclVarTemplateSpecialization == clang:
 static_assert((clang::Decl::Kind)ZigClangDeclVarTemplatePartialSpecialization == clang::Decl::VarTemplatePartialSpecialization, "");
 static_assert((clang::Decl::Kind)ZigClangDeclEnumConstant == clang::Decl::EnumConstant, "");
 static_assert((clang::Decl::Kind)ZigClangDeclIndirectField == clang::Decl::IndirectField, "");
+static_assert((clang::Decl::Kind)ZigClangDeclOMPDeclareMapper == clang::Decl::OMPDeclareMapper, "");
 static_assert((clang::Decl::Kind)ZigClangDeclOMPDeclareReduction == clang::Decl::OMPDeclareReduction, "");
+
 static_assert((clang::Decl::Kind)ZigClangDeclUnresolvedUsingValue == clang::Decl::UnresolvedUsingValue, "");
+static_assert((clang::Decl::Kind)ZigClangDeclOMPAllocate == clang::Decl::OMPAllocate, "");
 static_assert((clang::Decl::Kind)ZigClangDeclOMPRequires == clang::Decl::OMPRequires, "");
 static_assert((clang::Decl::Kind)ZigClangDeclOMPThreadPrivate == clang::Decl::OMPThreadPrivate, "");
 static_assert((clang::Decl::Kind)ZigClangDeclObjCPropertyImpl == clang::Decl::ObjCPropertyImpl, "");

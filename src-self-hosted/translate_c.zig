@@ -30,7 +30,7 @@ fn addrHash(x: usize) u32 {
         // pointers are usually aligned so we ignore the bits that are probably all 0 anyway
         // usually the larger bits of addr space are unused so we just chop em off
         64 => return @truncate(u32, x >> 4),
-        else => @compileError("unreachable"),
+        else => return @truncate(u32, x >> 4),
     }
 }
 
@@ -260,8 +260,8 @@ fn visitFnDecl(c: *Context, fn_decl: *const ZigClangFunctionDecl) Error!void {
             .None => has_body,
             .Extern, .Static => false,
             .PrivateExtern => return failDecl(c, fn_decl_loc, fn_name, "unsupported storage class: private extern"),
-            .Auto => unreachable, // Not legal on functions
-            .Register => unreachable, // Not legal on functions
+            .Auto => has_body, // Not legal on functions
+            .Register => has_body, // Not legal on functions
         },
     };
     const proto_node = switch (ZigClangType_getTypeClass(fn_type)) {
@@ -283,7 +283,15 @@ fn visitFnDecl(c: *Context, fn_decl: *const ZigClangFunctionDecl) Error!void {
                 error.OutOfMemory => |e| return e,
             };
         },
-        else => unreachable,
+        else => blk: {
+            const fn_no_proto_type = @ptrCast(*const ZigClangFunctionType, fn_type);
+            break :blk transFnNoProto(rp, fn_no_proto_type, fn_decl_loc, decl_ctx) catch |err| switch (err) {
+                error.UnsupportedType => {
+                    return failDecl(c, fn_decl_loc, fn_name, "unable to resolve prototype of function");
+                },
+                error.OutOfMemory => |e| return e,
+            };
+        },
     };
 
     if (!decl_ctx.has_body) {

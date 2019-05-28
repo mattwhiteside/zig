@@ -114,12 +114,12 @@ bool ZigLLVMTargetMachineEmitToFile(LLVMTargetMachineRef targ_machine_ref, LLVMM
     if (PMBuilder == nullptr) {
         *error_message = strdup("memory allocation failure");
         return true;
-    }
+      }
     PMBuilder->OptLevel = target_machine->getOptLevel();
     PMBuilder->SizeLevel = is_small ? 2 : 0;
 
     PMBuilder->DisableTailCalls = is_debug;
-    PMBuilder->DisableUnitAtATime = is_debug;
+    //PMBuilder->DisableUnitAtATime = is_debug;
     PMBuilder->DisableUnrollLoops = is_debug;
     PMBuilder->SLPVectorize = !is_debug;
     PMBuilder->LoopVectorize = !is_debug;
@@ -934,6 +934,7 @@ static_assert((Triple::ArchType)ZigLLVM_arm == Triple::arm, "");
 static_assert((Triple::ArchType)ZigLLVM_armeb == Triple::armeb, "");
 static_assert((Triple::ArchType)ZigLLVM_aarch64 == Triple::aarch64, "");
 static_assert((Triple::ArchType)ZigLLVM_aarch64_be == Triple::aarch64_be, "");
+static_assert((Triple::ArchType)ZigLLVM_aarch64_32 == Triple::aarch64_32, "");
 static_assert((Triple::ArchType)ZigLLVM_arc == Triple::arc, "");
 static_assert((Triple::ArchType)ZigLLVM_avr == Triple::avr, "");
 static_assert((Triple::ArchType)ZigLLVM_bpfel == Triple::bpfel, "");
@@ -1038,7 +1039,7 @@ static_assert((Triple::OSType)ZigLLVM_Fuchsia == Triple::Fuchsia, "");
 static_assert((Triple::OSType)ZigLLVM_IOS == Triple::IOS, "");
 // Commented out to work around a Debian/Ubuntu bug.
 // See https://github.com/ziglang/zig/issues/2076
-//static_assert((Triple::OSType)ZigLLVM_KFreeBSD == Triple::KFreeBSD, "");
+static_assert((Triple::OSType)ZigLLVM_KFreeBSD == Triple::KFreeBSD, "");
 static_assert((Triple::OSType)ZigLLVM_Linux == Triple::Linux, "");
 static_assert((Triple::OSType)ZigLLVM_Lv2 == Triple::Lv2, "");
 static_assert((Triple::OSType)ZigLLVM_MacOSX == Triple::MacOSX, "");
@@ -1074,6 +1075,8 @@ static_assert((Triple::EnvironmentType)ZigLLVM_GNUX32 == Triple::GNUX32, "");
 static_assert((Triple::EnvironmentType)ZigLLVM_CODE16 == Triple::CODE16, "");
 static_assert((Triple::EnvironmentType)ZigLLVM_EABI == Triple::EABI, "");
 static_assert((Triple::EnvironmentType)ZigLLVM_EABIHF == Triple::EABIHF, "");
+static_assert((Triple::EnvironmentType)ZigLLVM_ELFv1 == Triple::ELFv1, "");
+static_assert((Triple::EnvironmentType)ZigLLVM_ELFv2 == Triple::ELFv2, "");
 static_assert((Triple::EnvironmentType)ZigLLVM_Android == Triple::Android, "");
 static_assert((Triple::EnvironmentType)ZigLLVM_Musl == Triple::Musl, "");
 static_assert((Triple::EnvironmentType)ZigLLVM_MuslEABI == Triple::MuslEABI, "");
