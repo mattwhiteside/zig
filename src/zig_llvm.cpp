@@ -752,6 +752,8 @@ const char *ZigLLVMGetSubArchTypeName(ZigLLVM_SubArchType sub_arch) {
             return "v8m_baseline";
         case ZigLLVM_ARMSubArch_v8m_mainline:
             return "v8m_mainline";
+        case ZigLLVM_ARMSubArch_v8_1m_mainline:
+            return "v8_1m_mainline";
         case ZigLLVM_ARMSubArch_v7:
             return "v7";
         case ZigLLVM_ARMSubArch_v7em:
@@ -991,6 +993,7 @@ static_assert((Triple::SubArchType)ZigLLVM_ARMSubArch_v8 == Triple::ARMSubArch_v
 static_assert((Triple::SubArchType)ZigLLVM_ARMSubArch_v8r == Triple::ARMSubArch_v8r, "");
 static_assert((Triple::SubArchType)ZigLLVM_ARMSubArch_v8m_baseline == Triple::ARMSubArch_v8m_baseline, "");
 static_assert((Triple::SubArchType)ZigLLVM_ARMSubArch_v8m_mainline == Triple::ARMSubArch_v8m_mainline, "");
+static_assert((Triple::SubArchType)ZigLLVM_ARMSubArch_v8_1m_mainline == Triple::ARMSubArch_v8_1m_mainline, "");
 static_assert((Triple::SubArchType)ZigLLVM_ARMSubArch_v7 == Triple::ARMSubArch_v7, "");
 static_assert((Triple::SubArchType)ZigLLVM_ARMSubArch_v7em == Triple::ARMSubArch_v7em, "");
 static_assert((Triple::SubArchType)ZigLLVM_ARMSubArch_v7m == Triple::ARMSubArch_v7m, "");
