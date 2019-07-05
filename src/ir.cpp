@@ -24934,7 +24934,7 @@ static void ir_eval_float_op(IrAnalyze *ira, IrInstructionFloatOp *source_instr,
            float_type->id == ZigTypeIdComptimeFloat);
 
     BuiltinFnId fop = source_instr->op;
-    unsigned bits;
+    unsigned bits = 0;
 
     switch (float_type->id) {
     case ZigTypeIdComptimeFloat:

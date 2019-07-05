@@ -328,6 +328,8 @@ ZigLLVM_OSType get_llvm_os_type(Os os_type) {
             return ZigLLVM_Hurd;
         case OsWASI:
             return ZigLLVM_WASI;
+        case OsEmscripten:
+            return ZigLLVM_Emscripten;
     }
     zig_unreachable();
 }
@@ -403,6 +405,8 @@ static Os get_zig_os_type(ZigLLVM_OSType os_type) {
             return OsHurd;
         case ZigLLVM_WASI:
             return OsWASI;
+        case ZigLLVM_Emscripten:
+            return OsEmscripten;
     }
     zig_unreachable();
 }
@@ -448,6 +452,7 @@ const char *target_os_name(Os os_type) {
         case OsHermitCore:
         case OsHurd:
         case OsWASI:
+        case OsEmscripten:
             return ZigLLVMGetOSTypeName(get_llvm_os_type(os_type));
     }
     zig_unreachable();
@@ -524,6 +529,7 @@ SubArchList target_subarch_list(ZigLLVM_ArchType arch) {
 
         case ZigLLVM_aarch64:
         case ZigLLVM_aarch64_be:
+        case ZigLLVM_aarch64_32:
             return SubArchListArm64;
 
         case ZigLLVM_kalimba:
@@ -792,6 +798,7 @@ uint32_t target_arch_pointer_bit_width(ZigLLVM_ArchType arch) {
 
         case ZigLLVM_aarch64:
         case ZigLLVM_aarch64_be:
+        case ZigLLVM_aarch64_32:
         case ZigLLVM_amdgcn:
         case ZigLLVM_bpfel:
         case ZigLLVM_bpfeb:
@@ -935,6 +942,7 @@ uint32_t target_c_type_size_in_bits(const ZigTarget *target, CIntType id) {
         case OsAMDPAL:
         case OsHermitCore:
         case OsHurd:
+        case OsEmscripten:
             zig_panic("TODO c type size in bits for this target");
     }
     zig_unreachable();
@@ -1056,6 +1064,8 @@ const char *target_dynamic_linker(const ZigTarget *target) {
 
                 case ZigLLVM_aarch64_be:
                     return "/lib/ld-linux-aarch64_be.so.1";
+                case ZigLLVM_aarch64_32:
+                    return "/lib/ld-linux-aarch64_32.so.1";
 
                 case ZigLLVM_arm:
                 case ZigLLVM_thumb:
@@ -1177,6 +1187,7 @@ const char *target_dynamic_linker(const ZigTarget *target) {
         case OsHermitCore:
         case OsHurd:
         case OsWASI:
+        case OsEmscripten:
             zig_panic("TODO implement target_dynamic_linker for this OS");
     }
     zig_unreachable();
@@ -1221,6 +1232,7 @@ const char *arch_stack_pointer_register_name(ZigLLVM_ArchType arch) {
         case ZigLLVM_arm:
         case ZigLLVM_thumb:
         case ZigLLVM_aarch64_be:
+        case ZigLLVM_aarch64_32:
         case ZigLLVM_amdgcn:
         case ZigLLVM_amdil:
         case ZigLLVM_amdil64:
@@ -1277,6 +1289,7 @@ bool target_is_arm(const ZigTarget *target) {
         case ZigLLVM_arm:
         case ZigLLVM_thumb:
         case ZigLLVM_aarch64_be:
+        case ZigLLVM_aarch64_32:
         case ZigLLVM_armeb:
         case ZigLLVM_thumbeb:
             return true;
@@ -1420,6 +1433,7 @@ ZigLLVM_EnvironmentType target_default_abi(ZigLLVM_ArchType arch, Os os) {
         case OsKFreeBSD:
         case OsNetBSD:
         case OsHurd:
+        case OsEmscripten:
             return ZigLLVM_GNU;
         case OsWindows:
         case OsUefi:
@@ -1535,6 +1549,8 @@ const char *target_libc_generic_name(const ZigTarget *target) {
         case ZigLLVM_CODE16:
         case ZigLLVM_EABI:
         case ZigLLVM_EABIHF:
+        case ZigLLVM_ELFv1:
+        case ZigLLVM_ELFv2:
         case ZigLLVM_Android:
         case ZigLLVM_MSVC:
         case ZigLLVM_Itanium:

@@ -257,6 +257,8 @@ comptime {
         @export("__udivti3", @import("compiler_rt/udivti3.zig").__udivti3, linkage);
         @export("__udivmodti4", @import("compiler_rt/udivmodti4.zig").__udivmodti4, linkage);
         @export("__umodti3", @import("compiler_rt/umodti3.zig").__umodti3, linkage);
+        @export("__muldi3", @import("compiler_rt/muldi3.zig").__muldi3, linkage);
+        //@export("__floatunsidf", @import("compiler_rt/floatunsidf.zig").__floatunsidf, linkage);
     }
     @export("__muloti4", @import("compiler_rt/muloti4.zig").__muloti4, linkage);
     @export("__mulodi4", @import("compiler_rt/mulodi4.zig").__mulodi4, linkage);

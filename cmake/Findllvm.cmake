@@ -8,7 +8,7 @@
 # LLVM_LIBDIRS
 
 find_program(LLVM_CONFIG_EXE
-    NAMES llvm-config-8 llvm-config-8.0 llvm-config80 llvm-config
+    NAMES llvm-config-9 llvm-config-9.0 llvm-config90 llvm-config
     PATHS
         "/mingw64/bin"
         "/c/msys64/mingw64/bin"
@@ -28,15 +28,15 @@ execute_process(
 	OUTPUT_VARIABLE LLVM_CONFIG_VERSION
 	OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-if("${LLVM_CONFIG_VERSION}" VERSION_LESS 8)
-  message(FATAL_ERROR "expected LLVM 8.x but found ${LLVM_CONFIG_VERSION}")
-endif()
-if("${LLVM_CONFIG_VERSION}" VERSION_EQUAL 9)
-  message(FATAL_ERROR "expected LLVM 8.x but found ${LLVM_CONFIG_VERSION}")
-endif()
-if("${LLVM_CONFIG_VERSION}" VERSION_GREATER 9)
-  message(FATAL_ERROR "expected LLVM 8.x but found ${LLVM_CONFIG_VERSION}")
-endif()
+#if("${LLVM_CONFIG_VERSION}" VERSION_LESS 8)
+#  message(FATAL_ERROR "expected LLVM 8.x but found ${LLVM_CONFIG_VERSION}")
+#endif()
+#if("${LLVM_CONFIG_VERSION}" VERSION_EQUAL 9)
+#  message(FATAL_ERROR "expected LLVM 8.x but found ${LLVM_CONFIG_VERSION}")
+#endif()
+#if("${LLVM_CONFIG_VERSION}" VERSION_GREATER 9)
+#  message(FATAL_ERROR "expected LLVM 8.x but found ${LLVM_CONFIG_VERSION}")
+#endif()
 
 execute_process(
 	COMMAND ${LLVM_CONFIG_EXE} --targets-built
